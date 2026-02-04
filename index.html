@@ -92,26 +92,40 @@
 </div>
 
 <script>
+// ====== Mapping of bag numbers to Google Drive direct links ======
+const qrLinks = {
+  "G1-1A": "https://drive.google.com/uc?export=view&id=FILE_ID1",
+  "G1-2A": "https://drive.google.com/uc?export=view&id=FILE_ID2",
+  "G1-3A": "https://drive.google.com/uc?export=view&id=FILE_ID3",
+  // Add all your QR images here in this format
+  // "BagNumber": "DriveDirectLink"
+};
+
 function findQR() {
   const input = document.getElementById("bag");
   const bag = input.value.trim().toUpperCase();
-  if (!bag) return;
+  const link = qrLinks[bag];
+
+  const result = document.getElementById("result");
+  result.innerHTML = "";
+
+  if (!bag || !link) {
+    result.innerHTML = "<p>❌ QR not found</p>";
+    return;
+  }
 
   const img = new Image();
-  img.src = "qr/" + bag + ".png";
+  img.src = link;
   img.alt = bag;
 
   img.onload = () => {
-    const result = document.getElementById("result");
     result.innerHTML = "";
     result.appendChild(img);
-
-    // Add click event to zoom
     img.onclick = () => zoomImage(img.src);
   };
 
   img.onerror = () => {
-    document.getElementById("result").innerHTML = "<p>❌ QR not found</p>";
+    result.innerHTML = "<p>❌ QR image could not be loaded</p>";
   };
 }
 
@@ -136,3 +150,4 @@ function closeZoom() {
 
 </body>
 </html>
+
