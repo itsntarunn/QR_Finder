@@ -78,7 +78,7 @@
 
 <h2>Find QR Code</h2>
 
-<input id="bag" placeholder="G1-1A">
+<input id="bag" placeholder="A1-1A">
 <div>
   <button onclick="findQR()">Search</button>
   <button onclick="newSearch()">New Search</button>
@@ -91,42 +91,28 @@
   <img id="zoomImg" src="">
 </div>
 
-<script>
-// ====== Mapping of bag numbers to Google Drive direct links ======
-const qrLinks = {
-  "G1-1A": "https://drive.google.com/uc?export=view&id=FILE_ID1",
-  "G1-2A": "https://drive.google.com/uc?export=view&id=FILE_ID2",
-  "G1-3A": "https://drive.google.com/uc?export=view&id=FILE_ID3",
-  // Add all your QR images here in this format
-  // "BagNumber": "DriveDirectLink"
-};
+<!-- Include Base64 JS mapping -->
+<script src="images_base64.js"></script>
 
+<script>
 function findQR() {
   const input = document.getElementById("bag");
   const bag = input.value.trim().toUpperCase();
-  const link = qrLinks[bag];
-
   const result = document.getElementById("result");
   result.innerHTML = "";
 
-  if (!bag || !link) {
-    result.innerHTML = "<p>❌ QR not found</p>";
-    return;
-  }
+  if (!bag) return;
 
-  const img = new Image();
-  img.src = link;
-  img.alt = bag;
+  if (qrImages[bag]) {
+    const img = new Image();
+    img.src = qrImages[bag];  // Base64 from JS mapping
+    img.alt = bag;
 
-  img.onload = () => {
-    result.innerHTML = "";
-    result.appendChild(img);
     img.onclick = () => zoomImage(img.src);
-  };
-
-  img.onerror = () => {
-    result.innerHTML = "<p>❌ QR image could not be loaded</p>";
-  };
+    result.appendChild(img);
+  } else {
+    result.innerHTML = "<p>❌ QR image could not be loaded or not found</p>";
+  }
 }
 
 function newSearch() {
@@ -150,4 +136,3 @@ function closeZoom() {
 
 </body>
 </html>
-
