@@ -36,15 +36,16 @@
       margin: 5px;
     }
 
+    /* Bigger QR images */
     #result img {
       margin-top: 20px;
-      width: 90%;       /* bigger width */
-      max-width: 600px; /* bigger max width */
+      width: auto;       /* natural width */
+      max-width: 1000px; /* allow very large display */
       height: auto;
       border: 2px solid #333;
       border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.3s;
+      display: block;
     }
 
     #result p {
@@ -68,8 +69,8 @@
     }
 
     #zoomOverlay img {
-      max-width: 95%;   /* slightly bigger zoom */
-      max-height: 95%;
+      max-width: 98%;   /* nearly full screen zoom */
+      max-height: 98%;
       border-radius: 10px;
     }
   </style>
