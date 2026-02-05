@@ -1,83 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>QR Finder</title>
+  <title>QR Finder Debug</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #f5f5f5;
-    }
-
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-    }
-
-    input {
-      font-size: 18px;
-      padding: 10px;
-      width: 70%;
-      max-width: 300px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      box-sizing: border-box;
-    }
-
-    button {
-      font-size: 16px;
-      padding: 10px 15px;
-      margin: 5px;
-    }
-
-    #result img {
-      margin-top: 20px;
-      width: 80%;
-      max-width: 400px;
-      height: auto;
-      border: 2px solid #333;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    #result p {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: red;
-    }
-
-    /* Fullscreen zoom overlay */
-    #zoomOverlay {
-      display: none;
-      position: fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background-color: rgba(0,0,0,0.9);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    #zoomOverlay img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 10px;
-    }
+    body { font-family: Arial; padding:20px; text-align:center; background:#f5f5f5; }
+    input { padding:10px; width:70%; max-width:300px; text-transform:uppercase; margin-bottom:10px;}
+    button { padding:10px 15px; margin:5px; }
+    #result img { margin-top:20px; width:80%; max-width:400px; border:2px solid #333; border-radius:10px; cursor:pointer; }
+    #result p { margin-top:20px; font-size:1.2rem; color:red; }
+    #zoomOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; }
+    #zoomOverlay img { max-width:90%; max-height:90%; border-radius:10px; }
   </style>
 </head>
 <body>
 
-<h2>Find QR Code</h2>
-
+<h2>Find QR Code (Debug)</h2>
 <input id="bag" placeholder="A1-1A">
 <div>
   <button onclick="findQR()">Search</button>
@@ -86,52 +24,73 @@
 
 <div id="result"></div>
 
-<!-- Fullscreen zoom overlay -->
 <div id="zoomOverlay" onclick="closeZoom()">
   <img id="zoomImg" src="">
 </div>
 
-<!-- Include Base64 JS mapping -->
-<script src="images_base64.js"></script>
+<!-- Include combined JS -->
+<script src="all_qr.js"></script>
 
 <script>
-function findQR() {
   const input = document.getElementById("bag");
-  const bag = input.value.trim().toUpperCase();
   const result = document.getElementById("result");
-  result.innerHTML = "";
 
-  if (!bag) return;
+  console.log("DEBUG: Loaded HTML and JS");
 
-  if (qrImages[bag]) {
-    const img = new Image();
-    img.src = qrImages[bag];  // Base64 from JS mapping
-    img.alt = bag;
-
-    img.onclick = () => zoomImage(img.src);
-    result.appendChild(img);
+  // Show total QR codes loaded
+  if (typeof qrMap !== "undefined") {
+    console.log("DEBUG: qrMap exists!");
+    console.log("DEBUG: Total QR codes in map:", Object.keys(qrMap).length);
+    console.log("DEBUG: Sample keys:", Object.keys(qrMap).slice(0,10));
   } else {
-    result.innerHTML = "<p>❌ QR image could not be loaded or not found</p>";
+    console.error("DEBUG: qrMap is undefined! JS not loaded correctly.");
   }
-}
 
-function newSearch() {
-  document.getElementById("bag").value = "";
-  document.getElementById("result").innerHTML = "";
-  document.getElementById("bag").focus();
-}
+  function findQR() {
+    const bag = input.value.trim().toUpperCase();
+    console.log("DEBUG: Searching for bag number:", bag);
+    result.innerHTML = "";
 
-// Zoom functions
-function zoomImage(src) {
-  const overlay = document.getElementById("zoomOverlay");
-  const zoomImg = document.getElementById("zoomImg");
-  zoomImg.src = src;
-  overlay.style.display = "flex";
-}
+    if (!bag) return;
 
-function closeZoom() {
-  document.getElementById("zoomOverlay").style.display = "none";
-}
+    if (typeof getQR === "function") {
+      const qr = getQR(bag);
+      console.log("DEBUG: getQR returned:", qr);
+
+      if (qr) {
+        const img = new Image();
+        img.src = qr;
+        img.alt = bag;
+        img.onclick = () => zoomImage(img.src);
+        result.appendChild(img);
+      } else {
+        result.innerHTML = "<p>❌ QR image could not be loaded or not found</p>";
+      }
+    } else {
+      console.error("DEBUG: getQR function not found!");
+    }
+  }
+
+  function newSearch() {
+    input.value = "";
+    result.innerHTML = "";
+    input.focus();
+  }
+
+  function zoomImage(src) {
+    const overlay = document.getElementById("zoomOverlay");
+    const zoomImg = document.getElementById("zoomImg");
+    zoomImg.src = src;
+    overlay.style.display = "flex";
+  }
+
+  function closeZoom() {
+    document.getElementById("zoomOverlay").style.display = "none";
+  }
+
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') findQR();
+  });
 </script>
 
 </body>
