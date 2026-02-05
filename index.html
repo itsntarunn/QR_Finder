@@ -36,11 +36,11 @@
       margin: 5px;
     }
 
-    /* Bigger QR images */
+    /* Big and responsive QR images */
     #result img {
       margin-top: 20px;
-      width: auto;       /* natural width */
-      max-width: 1000px; /* allow very large display */
+      width: 600px;       /* fixed big width */
+      max-width: 90%;     /* scales down on smaller screens */
       height: auto;
       border: 2px solid #333;
       border-radius: 10px;
@@ -69,7 +69,7 @@
     }
 
     #zoomOverlay img {
-      max-width: 98%;   /* nearly full screen zoom */
+      max-width: 98%;
       max-height: 98%;
       border-radius: 10px;
     }
@@ -87,7 +87,6 @@
 
 <div id="result"></div>
 
-<!-- Fullscreen zoom overlay -->
 <div id="zoomOverlay" onclick="closeZoom()">
   <img id="zoomImg" src="">
 </div>
@@ -105,7 +104,7 @@
 
     if (!bag) return;
 
-    const qr = getQR(bag); // getQR comes from all_qr.js
+    const qr = getQR(bag); // getQR from all_qr.js
     if (qr) {
       const img = new Image();
       img.src = qr;
@@ -134,7 +133,6 @@
     document.getElementById("zoomOverlay").style.display = "none";
   }
 
-  // Press Enter to search
   input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') findQR();
   });
