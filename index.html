@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>QR Finder</title>
+  <title>QR Lookup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -77,7 +77,7 @@
 </head>
 <body>
 
-<h2>Find QR Code</h2>
+<h2>QR Lookup</h2>
 
 <input id="bag" placeholder="A1-1A">
 <div>
@@ -133,6 +133,7 @@
     document.getElementById("zoomOverlay").style.display = "none";
   }
 
+  // Press Enter to search
   input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') findQR();
   });
