@@ -38,8 +38,8 @@
 
     #result img {
       margin-top: 20px;
-      width: 80%;
-      max-width: 400px;
+      width: 90%;       /* bigger width */
+      max-width: 600px; /* bigger max width */
       height: auto;
       border: 2px solid #333;
       border-radius: 10px;
@@ -68,8 +68,8 @@
     }
 
     #zoomOverlay img {
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 95%;   /* slightly bigger zoom */
+      max-height: 95%;
       border-radius: 10px;
     }
   </style>
@@ -133,6 +133,7 @@
     document.getElementById("zoomOverlay").style.display = "none";
   }
 
+  // Press Enter to search
   input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') findQR();
   });
